@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Ateneo Blue Band - Receipt Generator</title>
 <style>
-  :root { --brand:#16379b; --muted:#6b7280; --dark:#111827; }
-  body { font-family:"Times New Roman", Georgia, serif; margin:0; background:#f3f6fb; color:#111; }
+  :root { --brand:#16379b; --muted:#FFFF; --dark:#111827; }
+  body { font-family:"Times New Roman", Georgia, serif; margin:0; background:#ffffff; color:#111; }
   .wrap { display:flex; gap:20px; padding:18px; box-sizing:border-box; align-items:flex-start; }
   .ui { width:360px; background:#fff; border-radius:8px; padding:16px; box-shadow:0 2px 8px rgba(0,0,0,.08); height:calc(100vh - 40px); overflow:auto; box-sizing:border-box; }
   .ui h2 { margin:0 0 10px 0; color:var(--brand); font-size:18px; }
@@ -14,7 +14,7 @@
   input[type="text"], input[type="date"], input[type="number"], select {
     width:100%; padding:8px 10px; margin-top:6px; box-sizing:border-box;
     border:1px solid #d1d5db; border-radius:4px; font-size:14px;
-  } 
+  }
   .items { margin-top:12px; }
   .item-row { display:flex; gap:6px; margin-top:8px; align-items:center; }
   .item-row input { font-size:13px; }
@@ -47,10 +47,10 @@
   table.totals { width:95%; margin-left:auto; margin-top:8px; font-size:13px; border-collapse:collapse; }
   table.totals td { padding:6px; border:none; }
   .align-amount {text-align: right; padding-right: 46px; position: relative; right: 0;}
-  .note { position:absolute; right:46px; bottom:78px; width:260px; font-size:11px; color:#16379b; text-align:left; border-left:3px solid #cfe0ff; padding-left:8px; }
+  .note { position:absolute; right:46px; bottom:78px; width:260px; font-size:15px; color:#16379b; text-align:left; border-left:3px solid #cfe0ff; padding-left:8px; }
   .validated { margin-top:18px; font-size:13px; color:#16379b; }
   .validated strong { display:block; font-size:13px; }
-  .write-line { border-bottom:none; solid #16379b; display:inline-block; min-width:160px; padding-bottom:3px; }
+  .write-line { border-bottom:1px solid #16379b; display:inline-block; min-width:160px; padding-bottom:3px;  box-shadow: none; }
   .barcode-note { font-size:11px; color:#16379b; text-align:center; margin-top:4px; }
 
   /* mobile-toggle button (hidden on desktop) */
@@ -79,7 +79,6 @@
     .ui { display: none; }
     .preview-wrap { display: block; padding: 0; }
     .receipt { box-shadow: none; margin: 0 auto; width: 210mm; height: 297mm; padding: 15mm; page-break-after: avoid; page-break-before: avoid; page-break-inside: avoid; overflow: hidden; }
-    
     @page { size: A4; margin: 10mm; }
   }
 </style>
@@ -202,10 +201,10 @@
       </div>
 
       <div style="position:absolute; left:46px; bottom:46px; font-size:13px; color:#16379b;">
-        <div>Payment Made By: <span class="write-line" id="r-name">__________________________</span></div>
-        <div style="margin-top:6px">Grade and Section: <span class="write-line" id="r-grade">__________________________</span></div>
-        <div style="margin-top:6px">Email: <span class="write-line" id="r-email">__________________________</span></div>
-        <div style="margin-top:6px">Payment Type: <span class="write-line" id="r-payment">__________________________</span></div>
+        <div>Payment Made By: <span class="write-line" id="r-name"></span></div>
+        <div style="margin-top:6px">Grade and Section: <span class="write-line" id="r-grade"></span></div>
+        <div style="margin-top:6px">Email: <span class="write-line" id="r-email"></span></div>
+        <div style="margin-top:6px">Payment Type: <span class="write-line" id="r-payment"></span></div>
       </div>
     </div>
   </div>
@@ -393,12 +392,12 @@ document.getElementById('btn-done').addEventListener('click', function(){
   const date = document.getElementById('input-date').value || '';
 
   // preview fields
-  document.getElementById('r-name').textContent = name || '__________________________';
-  document.getElementById('r-grade').textContent = grade || '__________________________';
-  document.getElementById('r-email').textContent = email || '__________________________';
-  document.getElementById('r-payment').textContent = payment || '__________________________';
-  document.getElementById('r-invoice').textContent = invoice || '____________';
-  document.getElementById('r-date').textContent = date || '____________';
+  document.getElementById('r-name').textContent = name || '';
+  document.getElementById('r-grade').textContent = grade || '';
+  document.getElementById('r-email').textContent = email || '';
+  document.getElementById('r-payment').textContent = payment || '';
+  document.getElementById('r-invoice').textContent = invoice || '';
+  document.getElementById('r-date').textContent = date || '';
 
   // barcode
   if(invoice) {
