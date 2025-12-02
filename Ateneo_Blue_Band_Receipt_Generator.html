@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -16,14 +17,13 @@
     border:1px solid #d1d5db; border-radius:4px; font-size:14px;
   }
   .items { margin-top:12px; }
-  .item-row { display:flex; gap:6px; margin-top:8px; align-items:center; flex-wrap:wrap; }
-  .item-row .preset-select { width:100%; padding:6px; font-size:12px; border:1px solid #d1d5db; border-radius:4px; margin-bottom:4px; }
+  .item-row { display:flex; gap:6px; margin-top:8px; align-items:center; }
   .item-row input { font-size:13px; }
-  .item-row .desc { flex:1; min-width:150px; }
+  .item-row .desc { flex:1; }
   .item-row .qty { width:56px; }
   .item-row .price { width:90px; }
   .item-row .amount { width:95px; background:#f9fafb; padding:7px; border-radius:4px; text-align:right; }
-  .item-row .btn-remove { width:32px; height:32px; background:#ef4444; color:#fff; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:18px; line-height:1; flex-shrink:0; cursor:pointer; border:none; }
+  .item-row .btn-remove { width:32px; height:32px; background:#ef4444; color:#fff; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:18px; line-height:1; flex-shrink:0; }
   .item-row .btn-remove:hover { background:#dc2626; }
   .buttons { margin-top:12px; display:flex; gap:8px; }
   button { cursor:pointer; border:0; padding:10px 12px; border-radius:6px; font-weight:600; }
@@ -54,105 +54,138 @@
   .write-line { border-bottom:1px solid #16379b; display:inline-block; min-width:160px; padding-bottom:3px;  box-shadow: none; }
   .barcode-note { font-size:11px; color:#16379b; text-align:center; margin-top:4px; }
   .mobile-toggle { display:none; margin-top:12px; width:100%; padding:10px; border-radius:6px; background:var(--dark); color:#fff; border:none; font-weight:700; cursor:pointer; }
-  
-  .config-section { margin-top:20px; padding:12px; background:#f0f9ff; border-radius:6px; border:2px solid var(--brand); }
-  .config-section h3 { margin:0 0 8px 0; color:var(--brand); font-size:14px; }
-  .config-section input { margin-top:4px; }
-  
-  .preset-items-section { margin-top:12px; padding:10px; background:#f9fafb; border-radius:6px; border:1px solid #d1d5db; }
-  .preset-items-section h4 { margin:0 0 6px 0; color:var(--brand); font-size:13px; }
-  .preset-item { display:flex; gap:6px; margin-top:6px; align-items:center; font-size:12px; }
-  .preset-item input { padding:6px 8px; font-size:12px; }
-  .preset-item .name-input { flex:1; }
-  .preset-item .price-input { width:80px; }
-  .preset-item button { width:28px; height:28px; padding:0; font-size:16px; }
-  .btn-add-preset { margin-top:8px; width:100%; background:var(--brand); color:#fff; padding:8px; font-size:12px; }
 
-  @media (max-width: 767px) {
-    .wrap { display:block; padding:12px; }
-    .ui { width:100%; height:auto; max-height:none; }
-    .preview-wrap { display:none; }
-    .mobile-toggle { display:block; }
-    .receipt { width:100%; box-shadow:none; padding:18px; }
-    table.items, table.totals { font-size:12px; display:block; overflow:auto; width:100%; }
-    .write-line { min-width:120px; }
-  }
+.config-section { margin-top:20px; padding:12px; background:#f0f9ff; border-radius:6px; border:2px solid var(–brand); }
+.config-section h3 { margin:0 0 8px 0; color:var(–brand); font-size:14px; }
+.config-section input { margin-top:4px; }
 
-  @media print {
-    body { background: #fff; margin: 0; padding: 0; overflow: hidden; }
-    .wrap { padding: 0; display: block; }
-    .ui { display: none; }
-    .preview-wrap { display: block; padding: 0; }
-    .receipt { box-shadow: none; margin: 0 auto; width: 210mm; height: 297mm; padding: 15mm; page-break-after: avoid; page-break-before: avoid; page-break-inside: avoid; overflow: hidden; }
-    @page { size: A4; margin: 10mm; }
-  }
+.preset-items-section { margin-top:12px; padding:10px; background:#f9fafb; border-radius:6px; border:1px solid #d1d5db; }
+.preset-items-section h4 { margin:0 0 6px 0; color:var(–brand); font-size:13px; }
+.preset-item { display:flex; gap:6px; margin-top:6px; align-items:center; font-size:12px; }
+.preset-item input { padding:6px 8px; font-size:12px; }
+.preset-item .name-input { flex:1; }
+.preset-item .price-input { width:80px; }
+.preset-item button { width:28px; height:28px; padding:0; font-size:16px; }
+.btn-add-preset { margin-top:8px; width:100%; background:var(–brand); color:#fff; padding:8px; font-size:12px; }
+
+/* Tablet layout (iPad) - side by side with smaller UI */
+@media (min-width: 768px) and (max-width: 1024px) {
+.wrap { padding:12px; gap:12px; }
+.ui { width:300px; font-size:12px; }
+.ui h2 { font-size:16px; }
+.config-section, .preset-items-section { padding:8px; }
+.config-section h3, .preset-items-section h4 { font-size:12px; }
+input[type=“text”], input[type=“date”], input[type=“number”], select { padding:6px 8px; font-size:13px; }
+label { font-size:12px; }
+button { padding:8px 10px; font-size:12px; }
+.receipt { width:650px; padding:28px 36px; }
+.receipt .header .seal { width:90px; }
+.receipt .company h1 { font-size:17px; }
+.receipt .company p { font-size:11px; }
+.receipt .meta { width:220px; font-size:11px; }
+.receipt table.items { font-size:12px; }
+.receipt table.items th, .receipt table.items td { padding:8px; }
+.receipt table.totals { font-size:12px; }
+.receipt .note { font-size:13px; width:220px; bottom:70px; right:36px; }
+.receipt .validated { font-size:12px; }
+.receipt #sig-brent { height:80px; }
+.receipt #sig-lead { height:90px; }
+.receipt .write-line { min-width:140px; }
+.item-row input { font-size:12px; }
+.item-row .amount { font-size:12px; padding:6px; }
+.preset-item input { font-size:11px; padding:5px 7px; }
+}
+
+/* Mobile layout - stacked */
+@media (max-width: 767px) {
+.wrap { display:block; padding:12px; }
+.ui { width:100%; height:auto; max-height:none; }
+.preview-wrap { display:none; }
+.mobile-toggle { display:block; }
+.receipt { width:100%; box-shadow:none; padding:18px; }
+table.items, table.totals { font-size:12px; display:block; overflow:auto; width:100%; }
+.write-line { min-width:120px; }
+}
+
+@media print {
+body { background: #fff; margin: 0; padding: 0; overflow: hidden; }
+.wrap { padding: 0; display: block; }
+.ui { display: none; }
+.preview-wrap { display: block; padding: 0; }
+.receipt { box-shadow: none; margin: 0 auto; width: 210mm; height: 297mm; padding: 15mm; page-break-after: avoid; page-break-before: avoid; page-break-inside: avoid; overflow: hidden; }
+@page { size: A4; margin: 10mm; }
+}
 </style>
+
 </head>
 <body>
 <div class="wrap">
   <div class="ui" id="ui">
     <h2>Receipt Encoder</h2>
 
-    <div class="config-section">
-      <h3>⚙️ Google Sheets Setup</h3>
-      <label>Google Apps Script URL</label>
-      <input id="sheets-url" type="text" placeholder="Paste your web app URL here" />
-      <div style="font-size:11px; color:#666; margin-top:4px;">Get this from your Google Apps Script deployment</div>
-    </div>
+```
+<div class="config-section">
+  <h3>⚙️ Google Sheets Setup</h3>
+  <label>Google Apps Script URL</label>
+  <input id="sheets-url" type="text" placeholder="Paste your web app URL here" />
+  <div style="font-size:11px; color:#666; margin-top:4px;">Get this from your Google Apps Script deployment</div>
+</div>
 
-    <div class="preset-items-section">
-      <h4>📦 Preset Items (Optional)</h4>
-      <div style="font-size:11px; color:#666; margin-bottom:8px;">Add items you frequently sell. They'll appear in a dropdown for quick selection.</div>
-      <div id="preset-items-list">
-        <!-- Preset items will be added here -->
-      </div>
-      <button class="btn-add-preset" id="add-preset-item">+ Add Preset Item</button>
-    </div>
+<div class="preset-items-section">
+  <h4>📦 Preset Items (Optional)</h4>
+  <div style="font-size:11px; color:#666; margin-bottom:8px;">Add items you frequently sell. They'll appear in a dropdown for quick selection.</div>
+  <div id="preset-items-list">
+    <!-- Preset items will be added here -->
+  </div>
+  <button class="btn-add-preset" id="add-preset-item">+ Add Preset Item</button>
+</div>
 
-    <label>Name</label>
-    <input id="input-name" type="text" placeholder="e.g. Juan Dela Cruz">
+<label>Name</label>
+<input id="input-name" type="text" placeholder="e.g. Juan Dela Cruz">
 
-    <label>Grade and Section</label>
-    <input id="input-grade" type="text" placeholder="e.g. 11-Hurtado">
+<label>Grade and Section</label>
+<input id="input-grade" type="text" placeholder="e.g. 11-Hurtado">
 
-    <label>Email</label>
-    <input id="input-email" type="text" placeholder="student@addu.edu.ph">
+<label>Email</label>
+<input id="input-email" type="text" placeholder="student@addu.edu.ph">
 
-    <label>Payment Type</label>
-    <select id="input-payment">
-      <option>Cash</option><option>GCash</option><option>Bank Transfer</option>
-    </select>
+<label>Payment Type</label>
+<select id="input-payment">
+  <option>Cash</option><option>GCash</option><option>Bank Transfer</option>
+</select>
 
-    <label>Invoice No.</label>
-    <div style="display:flex; gap:8px;">
-      <input id="input-invoice" type="text" placeholder="e.g. INV-2025-001" />
-      <button id="btn-gen-invoice" style="flex:0 0 160px; background:var(--dark); color:#fff; border-radius:6px;">Generate Invoice No.</button>
-    </div>
+<label>Invoice No.</label>
+<div style="display:flex; gap:8px;">
+  <input id="input-invoice" type="text" placeholder="e.g. INV-2025-001" />
+  <button id="btn-gen-invoice" style="flex:0 0 160px; background:var(--dark); color:#fff; border-radius:6px;">Generate Invoice No.</button>
+</div>
 
-    <label>Date of Recording</label>
-    <input id="input-date" type="date">
+<label>Date of Recording</label>
+<input id="input-date" type="date">
 
-    <div class="items">
-      <label>Items (Description • Qty • Price)</label>
-      <div id="items-container">
-        <!-- Item rows will be added here by JavaScript -->
-      </div>
-      <div style="display:flex; gap:8px; margin-top:8px;">
-        <button class="btn-add" id="add-item">+ Add Item</button>
-        <button class="btn-add" id="clear-all" style="background:#ef4444; color:#fff; border:1px solid #ef4444;">Clear All Fields</button>
-      </div>
-    </div>
+<div class="items">
+  <label>Items (Description • Qty • Price)</label>
+  <div id="items-container">
+    <!-- Initial item row will be created by JavaScript -->
+  </div>
+  <div style="display:flex; gap:8px; margin-top:8px;">
+    <button class="btn-add" id="add-item">+ Add Item</button>
+    <button class="btn-add" id="clear-all" style="background:#ef4444; color:#fff; border:1px solid #ef4444;">Clear All Fields</button>
+  </div>
+</div>
 
-    <div class="small">Subtotal and total are calculated automatically.</div>
+<div class="small">Subtotal and total are calculated automatically.</div>
 
-    <div class="buttons">
-      <button class="btn-done" id="btn-done">Done (Fill & Send to Sheets)</button>
-      <button class="btn-print" id="btn-print" style="display:none">Print Receipt</button>
-    </div>
+<div class="buttons">
+  <button class="btn-done" id="btn-done">Done (Fill & Send to Sheets)</button>
+  <button class="btn-print" id="btn-print" style="display:none">Print Receipt</button>
+</div>
 
-    <div id="download-status" style="display:none;"></div>
+<div id="download-status" style="display:none;"></div>
 
-    <button id="mobile-toggle-btn" class="mobile-toggle">🔄 Show Receipt Preview</button>
+<button id="mobile-toggle-btn" class="mobile-toggle">🔄 Show Receipt Preview</button>
+```
+
   </div>
 
   <div class="preview-wrap" id="preview-wrap">
@@ -169,46 +202,49 @@
             <div style="margin-top:6px"><span>Date of Recording</span><strong id="r-date">____________</strong></div>
           </div>
 
-          <svg id="barcode" class="knight" style="margin-top:10px"></svg>
-          <div class="barcode-note">Verified by ABB Finance Officers</div>
-        </div>
-      </div>
-
-      <table class="items" id="items-table">
-        <thead>
-          <tr><th>QTY</th><th>DESCRIPTION</th><th>PRICE</th><th>AMOUNT</th></tr>
-        </thead>
-        <tbody id="items-body"></tbody>
-      </table>
-
-      <table class="totals" style="width:100%; border-collapse:collapse; margin-top:8px; font-size:13px;">
-        <tr><td></td><td></td><td style="text-align:right; padding-right:16px;">SUBTOTAL:</td><td id="r-subtotal" class="align-amount">₱0.00</td></tr>
-        <tr><td></td><td></td><td style="text-align:right; padding-right:16px; font-weight:700">TOTAL:</td><td id="r-total" class="align-amount" style="font-weight:700;">₱0.00</td></tr>
-      </table>
-      
-      <div class="note"><small>Note: Once an invoice is created, the purchase is final and non-refundable. Please review details before payment.</small></div>
-
-      <div class="validated">
-        <div><strong>Validated By:</strong></div>
-        <div style="margin-top:20px; position:relative; top:-25px;">
-          <img id="sig-brent" src="sig_baguio.png" style="height:100px; margin-bottom:1px; position:absolute; top:-25px;" alt="sig_baguio"><br>
-          <span id="name-brent" style="position:relative; top:0px;">Lord Brent Nahshon Baguio</span><br>
-          <span id="role-brent">Finance Officer, The Ateneo Blue Band</span>
-        </div>
-        <div style="position:relative; top:-100px;">
-          <img id="sig-lead" src="sig_buaya.png" style="height:120px; position:relative; top:50px; z-index:0;" alt="sig_buaya">
-          <span id="name-lead" style="position:relative; top:0px; left:-87px; z-index:2;">Lead Gabrielle Buaya</span><br>
-          <span id="role-lead">Assistant Finance Officer, The Ateneo Blue Band</span>
-        </div>
-      </div>
-
-      <div style="position:absolute; left:46px; bottom:46px; font-size:13px; color:#16379b;">
-        <div>Payment Made By: <span class="write-line" id="r-name"></span></div>
-        <div style="margin-top:6px">Grade and Section: <span class="write-line" id="r-grade"></span></div>
-        <div style="margin-top:6px">Email: <span class="write-line" id="r-email"></span></div>
-        <div style="margin-top:6px">Payment Type: <span class="write-line" id="r-payment"></span></div>
-      </div>
+```
+      <svg id="barcode" class="knight" style="margin-top:10px"></svg>
+      <div class="barcode-note">Verified by ABB Finance Officers</div>
     </div>
+  </div>
+
+  <table class="items" id="items-table">
+    <thead>
+      <tr><th>QTY</th><th>DESCRIPTION</th><th>PRICE</th><th>AMOUNT</th></tr>
+    </thead>
+    <tbody id="items-body"></tbody>
+  </table>
+
+  <table class="totals" style="width:100%; border-collapse:collapse; margin-top:8px; font-size:13px;">
+    <tr><td></td><td></td><td style="text-align:right; padding-right:16px;">SUBTOTAL:</td><td id="r-subtotal" class="align-amount">₱0.00</td></tr>
+    <tr><td></td><td></td><td style="text-align:right; padding-right:16px; font-weight:700">TOTAL:</td><td id="r-total" class="align-amount" style="font-weight:700;">₱0.00</td></tr>
+  </table>
+  
+  <div class="note"><small>Note: Once an invoice is created, the purchase is final and non-refundable. Please review details before payment.</small></div>
+
+  <div class="validated">
+    <div><strong>Validated By:</strong></div>
+    <div style="margin-top:20px; position:relative; top:-25px;">
+      <img id="sig-brent" src="sig_baguio.png" style="height:100px; margin-bottom:1px; position:absolute; top:-25px;" alt="sig_baguio"><br>
+      <span id="name-brent" style="position:relative; top:0px;">Lord Brent Nahshon Baguio</span><br>
+      <span id="role-brent">Finance Officer, The Ateneo Blue Band</span>
+    </div>
+    <div style="position:relative; top:-100px;">
+      <img id="sig-lead" src="sig_buaya.png" style="height:120px; position:relative; top:50px; z-index:0;" alt="sig_buaya">
+      <span id="name-lead" style="position:relative; top:0px; left:-87px; z-index:2;">Lead Gabrielle Buaya</span><br>
+      <span id="role-lead">Assistant Finance Officer, The Ateneo Blue Band</span>
+    </div>
+  </div>
+
+  <div style="position:absolute; left:46px; bottom:46px; font-size:13px; color:#16379b;">
+    <div>Payment Made By: <span class="write-line" id="r-name"></span></div>
+    <div style="margin-top:6px">Grade and Section: <span class="write-line" id="r-grade"></span></div>
+    <div style="margin-top:6px">Email: <span class="write-line" id="r-email"></span></div>
+    <div style="margin-top:6px">Payment Type: <span class="write-line" id="r-payment"></span></div>
+  </div>
+</div>
+```
+
   </div>
 </div>
 
@@ -333,7 +369,7 @@ function buildItemRow(desc='', qty=1, price=0){
   });
   
   tr.innerHTML = `
-    <select class="preset-select">${dropdownOptions}</select>
+    <select class="preset-select" style="width:100%; padding:6px; font-size:12px; border:1px solid #d1d5db; border-radius:4px; margin-bottom:4px;">${dropdownOptions}</select>
     <input class="desc" placeholder="Description" value="${desc}">
     <input class="qty" type="number" min="0" value="${qty}">
     <input class="price" type="number" min="0" step="0.01" value="${price}">
@@ -376,7 +412,7 @@ function buildItemRow(desc='', qty=1, price=0){
 
 const itemsContainer = document.getElementById('items-container');
 
-// Initialize with first row
+// Create initial item row
 itemsContainer.appendChild(buildItemRow());
 
 document.getElementById('add-item').addEventListener('click', ()=> itemsContainer.appendChild(buildItemRow()));
@@ -571,5 +607,6 @@ mobileToggleBtn && mobileToggleBtn.addEventListener('click', ()=>{
   }
 });
 </script>
+
 </body>
 </html>
