@@ -68,32 +68,32 @@
 .preset-item button { width:28px; height:28px; padding:0; font-size:16px; }
 .btn-add-preset { margin-top:8px; width:100%; background:var(–brand); color:#fff; padding:8px; font-size:12px; }
 
-/* Tablet layout (iPad) - side by side with smaller UI */
-@media (min-width: 768px) and (max-width: 1024px) {
-.wrap { padding:12px; gap:12px; }
-.ui { width:300px; font-size:12px; }
-.ui h2 { font-size:16px; }
-.config-section, .preset-items-section { padding:8px; }
-.config-section h3, .preset-items-section h4 { font-size:12px; }
-input[type=“text”], input[type=“date”], input[type=“number”], select { padding:6px 8px; font-size:13px; }
+/* Tablet layout (iPad 9th gen: 2160x1620 = 1080x810 CSS pixels in landscape, 810x1080 in portrait) */
+@media (min-width: 768px) and (max-width: 1100px) {
+.wrap { padding:16px; gap:16px; }
+.ui { width:340px; font-size:13px; }
+.ui h2 { font-size:17px; }
+.config-section, .preset-items-section { padding:10px; }
+.config-section h3, .preset-items-section h4 { font-size:13px; }
+input[type=“text”], input[type=“date”], input[type=“number”], select { padding:7px 9px; font-size:14px; }
 label { font-size:12px; }
-button { padding:8px 10px; font-size:12px; }
-.receipt { width:650px; padding:28px 36px; }
-.receipt .header .seal { width:90px; }
-.receipt .company h1 { font-size:17px; }
+button { padding:9px 11px; font-size:13px; }
+.receipt { width:680px; padding:32px 40px; }
+.receipt .header .seal { width:100px; }
+.receipt .company h1 { font-size:18px; }
 .receipt .company p { font-size:11px; }
-.receipt .meta { width:220px; font-size:11px; }
+.receipt .meta { width:240px; font-size:11px; }
 .receipt table.items { font-size:12px; }
-.receipt table.items th, .receipt table.items td { padding:8px; }
+.receipt table.items th, .receipt table.items td { padding:9px; }
 .receipt table.totals { font-size:12px; }
-.receipt .note { font-size:13px; width:220px; bottom:70px; right:36px; }
+.receipt .note { font-size:14px; width:240px; bottom:74px; right:40px; }
 .receipt .validated { font-size:12px; }
-.receipt #sig-brent { height:80px; }
-.receipt #sig-lead { height:90px; }
-.receipt .write-line { min-width:140px; }
+.receipt #sig-brent { height:90px; }
+.receipt #sig-lead { height:100px; }
+.receipt .write-line { min-width:150px; }
 .item-row input { font-size:12px; }
 .item-row .amount { font-size:12px; padding:6px; }
-.preset-item input { font-size:11px; padding:5px 7px; }
+.preset-item input { font-size:12px; padding:6px 8px; }
 }
 
 /* Mobile layout - stacked */
