@@ -200,82 +200,108 @@
       margin-bottom: 5px;
     }
 
-    .item-selection {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 12px;
-      align-items: center;
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
     }
 
-    .item-selection select {
-      flex: 1;
-      padding: 12px;
+    .item-tile {
+      background: white;
       border: 2px solid #e5e7eb;
-      border-radius: 8px;
-      font-size: 15px;
-      font-family: inherit;
-      transition: all 0.3s ease;
-    }
-
-    .item-selection select:focus {
-      outline: none;
-      border-color: #16379b;
-      box-shadow: 0 0 0 4px rgba(22, 55, 155, 0.1);
-    }
-
-    .item-selection input[type="number"] {
-      width: 80px;
-      padding: 12px;
-      border: 2px solid #e5e7eb;
-      border-radius: 8px;
-      font-size: 15px;
-      text-align: center;
-    }
-
-    .item-selection input[type="number"]:focus {
-      outline: none;
-      border-color: #16379b;
-      box-shadow: 0 0 0 4px rgba(22, 55, 155, 0.1);
-    }
-
-    .item-selection .btn-remove-item {
-      width: 40px;
-      height: 40px;
-      background: #ef4444;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 20px;
+      border-radius: 12px;
+      padding: 16px;
       cursor: pointer;
       transition: all 0.3s ease;
+      text-align: center;
+      position: relative;
+    }
+
+    .item-tile:hover {
+      border-color: #16379b;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(22, 55, 155, 0.15);
+    }
+
+    .item-tile.selected {
+      background: #16379b;
+      border-color: #16379b;
+      color: white;
+    }
+
+    .item-tile .item-name {
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 8px;
+      word-wrap: break-word;
+    }
+
+    .item-tile .item-price {
+      font-size: 14px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .item-tile.selected .item-price {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .item-tile .qty-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #10b981;
+      color: white;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
     }
 
-    .item-selection .btn-remove-item:hover {
-      background: #dc2626;
-      transform: scale(1.05);
+    .quantity-controls {
+      display: none;
+      margin-top: 12px;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
 
-    .btn-add-item {
-      width: 100%;
-      padding: 12px;
-      background: transparent;
-      color: #16379b;
-      border: 2px dashed #16379b;
-      border-radius: 8px;
-      font-size: 15px;
+    .item-tile.selected .quantity-controls {
+      display: flex;
+    }
+
+    .qty-btn {
+      width: 30px;
+      height: 30px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: white;
+      border-radius: 6px;
+      font-size: 18px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
-      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
     }
 
-    .btn-add-item:hover {
-      background: #f0f9ff;
-      border-color: #0d2461;
+    .qty-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .qty-display {
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      min-width: 30px;
+      text-align: center;
     }
 
     .selected-items-summary {
@@ -343,11 +369,10 @@
       </div>
 
       <div class="form-group">
-        <label for="items">Items to Purchase (Optional)</label>
-        <div id="items-container">
-          <!-- Item selections will be added here -->
+        <label for="items">Items to Purchase</label>
+        <div id="items-container" class="items-grid">
+          <!-- Item tiles will be added here -->
         </div>
-        <button type="button" class="btn-add-item" id="btn-add-item">+ Add Item</button>
       </div>
 
       <button type="submit" class="btn-submit">Submit Information</button>
@@ -368,6 +393,8 @@
 
     // Load preset items from localStorage
     let presetItems = [];
+    let selectedItems = {}; // Track selected items: { itemIdx: quantity }
+
     function loadPresetItems() {
       const saved = localStorage.getItem('preset_items_abb');
       if (saved) {
@@ -377,52 +404,78 @@
           presetItems = [];
         }
       }
+      renderItemTiles();
     }
 
-    // Create item selection row
-    function createItemRow() {
-      const div = document.createElement('div');
-      div.className = 'item-selection';
+    // Render item tiles
+    function renderItemTiles() {
+      itemsContainer.innerHTML = '';
 
-      let options = '<option value="">-- Select an item --</option>';
+      if (presetItems.length === 0) {
+        itemsContainer.innerHTML = '<p style="color:#6b7280; font-size:14px; text-align:center; padding:20px;">No items available. Please add preset items in the main receipt generator.</p>';
+        return;
+      }
+
       presetItems.forEach((item, idx) => {
-        if (item.name) {
-          options += `<option value="${idx}">${item.name} - ₱${item.price.toFixed(2)}</option>`;
+        if (!item.name) return;
+
+        const tile = document.createElement('div');
+        tile.className = 'item-tile';
+        if (selectedItems[idx]) {
+          tile.classList.add('selected');
         }
+
+        tile.innerHTML = `
+          <div class="item-name">${item.name}</div>
+          <div class="item-price">₱${item.price.toFixed(2)}</div>
+          ${selectedItems[idx] ? `<div class="qty-badge">${selectedItems[idx]}</div>` : ''}
+          <div class="quantity-controls">
+            <button type="button" class="qty-btn qty-minus">−</button>
+            <div class="qty-display">${selectedItems[idx] || 1}</div>
+            <button type="button" class="qty-btn qty-plus">+</button>
+          </div>
+        `;
+
+        // Toggle selection on tile click (but not on buttons)
+        tile.addEventListener('click', (e) => {
+          if (e.target.classList.contains('qty-btn')) return;
+
+          if (selectedItems[idx]) {
+            delete selectedItems[idx];
+          } else {
+            selectedItems[idx] = 1;
+          }
+          renderItemTiles();
+        });
+
+        // Quantity controls
+        const minusBtn = tile.querySelector('.qty-minus');
+        const plusBtn = tile.querySelector('.qty-plus');
+
+        if (minusBtn) {
+          minusBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (selectedItems[idx] > 1) {
+              selectedItems[idx]--;
+              renderItemTiles();
+            }
+          });
+        }
+
+        if (plusBtn) {
+          plusBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            selectedItems[idx] = (selectedItems[idx] || 1) + 1;
+            renderItemTiles();
+          });
+        }
+
+        itemsContainer.appendChild(tile);
       });
-
-      div.innerHTML = `
-        <select class="item-select">${options}</select>
-        <input type="number" class="item-qty" min="1" value="1" placeholder="Qty">
-        <button type="button" class="btn-remove-item">×</button>
-      `;
-
-      div.querySelector('.btn-remove-item').addEventListener('click', () => {
-        div.remove();
-        updateItemsSummary();
-      });
-
-      div.querySelector('.item-select').addEventListener('change', updateItemsSummary);
-      div.querySelector('.item-qty').addEventListener('input', updateItemsSummary);
-
-      return div;
     }
 
-    // Update items summary
-    function updateItemsSummary() {
-      // Summary functionality can be added here if needed
-    }
-
-    // Add item button
-    document.getElementById('btn-add-item').addEventListener('click', () => {
-      itemsContainer.appendChild(createItemRow());
-    });
-
-    // Initialize with one item row if presets exist
+    // Initialize
     loadPresetItems();
-    if (presetItems.length > 0) {
-      itemsContainer.appendChild(createItemRow());
-    }
 
     // Clear error styling when user types
     [nameInput, gradeInput, emailInput].forEach(input => {
@@ -465,22 +518,16 @@
 
       if (!isValid) return;
 
-      // Collect selected items
-      const selectedItems = [];
-      const itemRows = itemsContainer.querySelectorAll('.item-selection');
-      itemRows.forEach(row => {
-        const select = row.querySelector('.item-select');
-        const qty = parseInt(row.querySelector('.item-qty').value) || 1;
-        const idx = select.value;
-
-        if (idx !== '') {
-          const item = presetItems[parseInt(idx)];
-          selectedItems.push({
-            description: item.name,
-            quantity: qty,
-            price: item.price
-          });
-        }
+      // Collect selected items from tiles
+      const itemsArray = [];
+      Object.keys(selectedItems).forEach(idx => {
+        const item = presetItems[parseInt(idx)];
+        const qty = selectedItems[idx];
+        itemsArray.push({
+          description: item.name,
+          quantity: qty,
+          price: item.price
+        });
       });
 
       // Get the data
@@ -488,7 +535,7 @@
         name: nameInput.value.trim(),
         grade: gradeInput.value.trim(),
         email: emailInput.value.trim(),
-        items: selectedItems,
+        items: itemsArray,
         timestamp: new Date().toISOString()
       };
 
@@ -527,10 +574,8 @@
       // Clear form after 3 seconds and hide success message
       setTimeout(() => {
         form.reset();
-        itemsContainer.innerHTML = '';
-        if (presetItems.length > 0) {
-          itemsContainer.appendChild(createItemRow());
-        }
+        selectedItems = {};
+        renderItemTiles();
         successMessage.classList.remove('show');
         successMessage.innerHTML = '✅ Information submitted successfully! Please proceed to payment.';
         nameInput.focus();
@@ -546,10 +591,8 @@
     window.addEventListener('message', (event) => {
       if (event.data.type === 'CLEAR_FORM') {
         form.reset();
-        itemsContainer.innerHTML = '';
-        if (presetItems.length > 0) {
-          itemsContainer.appendChild(createItemRow());
-        }
+        selectedItems = {};
+        renderItemTiles();
         successMessage.classList.remove('show');
         nameInput.focus();
       }
