@@ -30,6 +30,8 @@
       width: 100%;
       padding: 50px 40px;
       animation: slideIn 0.5s ease-out;
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
     @keyframes slideIn {
@@ -197,6 +199,114 @@
       display: block;
       margin-bottom: 5px;
     }
+
+    .item-selection {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+
+    .item-selection select {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+
+    .item-selection select:focus {
+      outline: none;
+      border-color: #16379b;
+      box-shadow: 0 0 0 4px rgba(22, 55, 155, 0.1);
+    }
+
+    .item-selection input[type="number"] {
+      width: 80px;
+      padding: 12px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 15px;
+      text-align: center;
+    }
+
+    .item-selection input[type="number"]:focus {
+      outline: none;
+      border-color: #16379b;
+      box-shadow: 0 0 0 4px rgba(22, 55, 155, 0.1);
+    }
+
+    .item-selection .btn-remove-item {
+      width: 40px;
+      height: 40px;
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .item-selection .btn-remove-item:hover {
+      background: #dc2626;
+      transform: scale(1.05);
+    }
+
+    .btn-add-item {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      color: #16379b;
+      border: 2px dashed #16379b;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 10px;
+    }
+
+    .btn-add-item:hover {
+      background: #f0f9ff;
+      border-color: #0d2461;
+    }
+
+    .selected-items-summary {
+      background: #f9fafb;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .selected-items-summary.show {
+      display: block;
+    }
+
+    .selected-items-summary h4 {
+      color: #16379b;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .selected-items-summary .item-line {
+      font-size: 13px;
+      color: #374151;
+      padding: 4px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .selected-items-summary .item-line:last-child {
+      border-bottom: none;
+    }
   </style>
 </head>
 
@@ -232,6 +342,14 @@
         <div class="error-message" id="email-error">Please enter a valid email address</div>
       </div>
 
+      <div class="form-group">
+        <label for="items">Items to Purchase (Optional)</label>
+        <div id="items-container">
+          <!-- Item selections will be added here -->
+        </div>
+        <button type="button" class="btn-add-item" id="btn-add-item">+ Add Item</button>
+      </div>
+
       <button type="submit" class="btn-submit">Submit Information</button>
     </form>
 
@@ -246,6 +364,65 @@
     const gradeInput = document.getElementById('grade');
     const emailInput = document.getElementById('email');
     const successMessage = document.getElementById('success-message');
+    const itemsContainer = document.getElementById('items-container');
+
+    // Load preset items from localStorage
+    let presetItems = [];
+    function loadPresetItems() {
+      const saved = localStorage.getItem('preset_items_abb');
+      if (saved) {
+        try {
+          presetItems = JSON.parse(saved);
+        } catch (e) {
+          presetItems = [];
+        }
+      }
+    }
+
+    // Create item selection row
+    function createItemRow() {
+      const div = document.createElement('div');
+      div.className = 'item-selection';
+
+      let options = '<option value="">-- Select an item --</option>';
+      presetItems.forEach((item, idx) => {
+        if (item.name) {
+          options += `<option value="${idx}">${item.name} - ₱${item.price.toFixed(2)}</option>`;
+        }
+      });
+
+      div.innerHTML = `
+        <select class="item-select">${options}</select>
+        <input type="number" class="item-qty" min="1" value="1" placeholder="Qty">
+        <button type="button" class="btn-remove-item">×</button>
+      `;
+
+      div.querySelector('.btn-remove-item').addEventListener('click', () => {
+        div.remove();
+        updateItemsSummary();
+      });
+
+      div.querySelector('.item-select').addEventListener('change', updateItemsSummary);
+      div.querySelector('.item-qty').addEventListener('input', updateItemsSummary);
+
+      return div;
+    }
+
+    // Update items summary
+    function updateItemsSummary() {
+      // Summary functionality can be added here if needed
+    }
+
+    // Add item button
+    document.getElementById('btn-add-item').addEventListener('click', () => {
+      itemsContainer.appendChild(createItemRow());
+    });
+
+    // Initialize with one item row if presets exist
+    loadPresetItems();
+    if (presetItems.length > 0) {
+      itemsContainer.appendChild(createItemRow());
+    }
 
     // Clear error styling when user types
     [nameInput, gradeInput, emailInput].forEach(input => {
@@ -288,16 +465,34 @@
 
       if (!isValid) return;
 
+      // Collect selected items
+      const selectedItems = [];
+      const itemRows = itemsContainer.querySelectorAll('.item-selection');
+      itemRows.forEach(row => {
+        const select = row.querySelector('.item-select');
+        const qty = parseInt(row.querySelector('.item-qty').value) || 1;
+        const idx = select.value;
+
+        if (idx !== '') {
+          const item = presetItems[parseInt(idx)];
+          selectedItems.push({
+            description: item.name,
+            quantity: qty,
+            price: item.price
+          });
+        }
+      });
+
       // Get the data
       const customerData = {
         name: nameInput.value.trim(),
         grade: gradeInput.value.trim(),
         email: emailInput.value.trim(),
+        items: selectedItems,
         timestamp: new Date().toISOString()
       };
 
       // Send to parent window (your main receipt generator)
-      // Send multiple times to ensure delivery
       if (window.opener && !window.opener.closed) {
         const message = {
           type: 'CUSTOMER_INFO',
@@ -332,6 +527,10 @@
       // Clear form after 3 seconds and hide success message
       setTimeout(() => {
         form.reset();
+        itemsContainer.innerHTML = '';
+        if (presetItems.length > 0) {
+          itemsContainer.appendChild(createItemRow());
+        }
         successMessage.classList.remove('show');
         successMessage.innerHTML = '✅ Information submitted successfully! Please proceed to payment.';
         nameInput.focus();
@@ -347,6 +546,10 @@
     window.addEventListener('message', (event) => {
       if (event.data.type === 'CLEAR_FORM') {
         form.reset();
+        itemsContainer.innerHTML = '';
+        if (presetItems.length > 0) {
+          itemsContainer.appendChild(createItemRow());
+        }
         successMessage.classList.remove('show');
         nameInput.focus();
       }

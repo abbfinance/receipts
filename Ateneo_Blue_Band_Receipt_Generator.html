@@ -1046,10 +1046,22 @@
         document.getElementById('input-grade').value = customerData.grade || '';
         document.getElementById('input-email').value = customerData.email || '';
 
+        // Auto-fill items if provided
+        if (customerData.items && customerData.items.length > 0) {
+          // Clear existing items
+          itemsContainer.innerHTML = '';
+
+          // Add each selected item
+          customerData.items.forEach(item => {
+            const row = buildItemRow(item.description, item.quantity, item.price);
+            itemsContainer.appendChild(row);
+          });
+        }
+
         // Show success status
         const statusDiv = document.getElementById('customer-status');
         const statusText = document.getElementById('customer-status-text');
-        statusText.textContent = `Customer info received: ${customerData.name}`;
+        statusText.textContent = `Customer info received: ${customerData.name}${customerData.items && customerData.items.length > 0 ? ` (${customerData.items.length} item${customerData.items.length !== 1 ? 's' : ''})` : ''}`;
         statusDiv.style.display = 'block';
 
         // Focus on payment type field for smooth workflow
@@ -1089,10 +1101,19 @@
               gradeField.value = customerData.grade || '';
               emailField.value = customerData.email || '';
 
+              // Auto-fill items if provided
+              if (customerData.items && customerData.items.length > 0) {
+                itemsContainer.innerHTML = '';
+                customerData.items.forEach(item => {
+                  const row = buildItemRow(item.description, item.quantity, item.price);
+                  itemsContainer.appendChild(row);
+                });
+              }
+
               // Show status
               const statusDiv = document.getElementById('customer-status');
               const statusText = document.getElementById('customer-status-text');
-              statusText.textContent = `Auto-loaded: ${customerData.name}`;
+              statusText.textContent = `Auto-loaded: ${customerData.name}${customerData.items && customerData.items.length > 0 ? ` (${customerData.items.length} item${customerData.items.length !== 1 ? 's' : ''})` : ''}`;
               statusDiv.style.display = 'block';
 
               setTimeout(() => {
