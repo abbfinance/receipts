@@ -482,7 +482,7 @@
 
       @page {
         size: A4;
-        margin: 10mm;
+        margin: 0;
       }
     }
   </style>
@@ -990,6 +990,32 @@
       }
 
       document.getElementById('btn-print').style.display = 'inline-block';
+
+      // Auto-download after a short delay to ensure receipt is filled
+      setTimeout(() => {
+        // Extract the last number from invoice for filename
+        // e.g., INV-20251204-0004 -> 4
+        const invoiceNumber = document.getElementById('input-invoice').value || '';
+        const match = invoiceNumber.match(/-(\d+)$/);
+        if (match) {
+          const lastNumber = parseInt(match[1], 10);
+          // Save original title to restore later
+          const originalTitle = document.title;
+          // Set title to just the number for PDF filename
+          document.title = lastNumber.toString();
+
+          // Trigger print dialog with optimized settings
+          window.print();
+
+          // Restore original title after print dialog opens
+          setTimeout(() => {
+            document.title = originalTitle;
+          }, 1000);
+        } else {
+          // If no invoice number pattern found, just print normally
+          window.print();
+        }
+      }, 500);
     });
 
     /* Print button */
